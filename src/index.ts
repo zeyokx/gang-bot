@@ -12,7 +12,7 @@ import {
   type TextChannel,
 } from "discord.js";
 import { getTalkChannels } from "./bot/storage.js";
-import { getGangAIReply } from "./bot/ai.js";
+import { getAIReply } from "./bot/ai.js";
 
 import * as setchanneltalk from "./bot/commands/setchanneltalk.js";
 import * as fakeban from "./bot/commands/fakeban.js";
@@ -75,14 +75,11 @@ client.on(Events.MessageCreate, async (message: Message) => {
   if (!isMentioned && !isSetChannel) return;
 
   const content = message.content.replace(/<@!?\d+>/g, "").trim();
-  if (!content) {
-    await message.reply("yo what you want fam? say something 👀").catch(() => {});
-    return;
-  }
+  if (!content) return;
 
   try {
     await message.channel.sendTyping();
-    const reply = await getGangAIReply(message.author.id, content);
+    const reply = await getAIReply(message.author.id, content);
     await message.reply(reply);
   } catch (err) {
     console.error("Error sending AI reply:", err);
