@@ -64,15 +64,19 @@ client.on(Events.MessageCreate, async (message: Message) => {
   if (message.author.bot) return;
   if (!message.guildId) return;
 
-  const talkChannels = getTalkChannels(message.guildId);
-  if (!talkChannels.includes(message.channel.id)) return;
-
   const channel = message.channel as TextChannel;
   const botMember = message.guild?.members.me;
   if (!botMember?.permissionsIn(channel).has(PermissionFlagsBits.SendMessages)) return;
 
+  const isMentioned = client.user ? message.mentions.users.has(client.user.id) : false;
+  const talkChannels = getTalkChannels(message.guildId);
+  const isSetChannel = talkChannels.includes(message.channel.id);
+
+  if (!isMentioned && !isSetChannel) return;
+
   try {
-    const reply = message.content ? makeGangReply(message.content) : makeGangResponse();
+    const content = message.content.replace(/<@!?\d+>/g, "").trim();
+    const reply = content ? makeGangReply(content) : makeGangResponse();
     await message.reply(reply);
   } catch (err) {
     console.error("Error sending gang reply:", err);
