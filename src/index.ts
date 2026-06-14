@@ -12,7 +12,7 @@ import {
   type TextChannel,
 } from "discord.js";
 import { getTalkChannels } from "./bot/storage.js";
-import { makeGangReply, makeGangResponse } from "./bot/gangTalk.js";
+import { getGangAIReply } from "./bot/ai.js";
 
 import * as setchanneltalk from "./bot/commands/setchanneltalk.js";
 import * as fakeban from "./bot/commands/fakeban.js";
@@ -51,6 +51,7 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
   ],
 });
 
@@ -73,12 +74,18 @@ client.on(Events.MessageCreate, async (message: Message) => {
 
   if (!isMentioned && !isSetChannel) return;
 
+  const content = message.content.replace(/<@!?\d+>/g, "").trim();
+  if (!content) {
+    await message.reply("yo what you want fam? say something 👀").catch(() => {});
+    return;
+  }
+
   try {
-    const content = message.content.replace(/<@!?\d+>/g, "").trim();
-    const reply = content ? makeGangReply(content) : makeGangResponse();
+    await message.channel.sendTyping();
+    const reply = await getGangAIReply(message.author.id, content);
     await message.reply(reply);
   } catch (err) {
-    console.error("Error sending gang reply:", err);
+    console.error("Error sending AI reply:", err);
   }
 });
 
