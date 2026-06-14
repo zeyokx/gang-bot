@@ -1,0 +1,15 @@
+{
+  "name": "gang-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node --enable-source-maps ./dist/index.mjs",
+    "dev": "node build.mjs && node --enable-source-maps ./dist/index.mjs"
+  },
+  "dependencies": {
+    "discord.js": "^14.18.0",
+    "esbuild": "^0.27.3"
+  }
+}
