@@ -1,8 +1,8 @@
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 
-const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+const groq = new Groq({ apiKey: process.env["GROQ_API_KEY"] });
 
-const conversationHistory: Map<string, OpenAI.Chat.ChatCompletionMessageParam[]> = new Map();
+const conversationHistory: Map<string, Groq.Chat.ChatCompletionMessageParam[]> = new Map();
 
 export async function getAIReply(userId: string, message: string): Promise<string> {
   try {
@@ -17,8 +17,8 @@ export async function getAIReply(userId: string, message: string): Promise<strin
       history.splice(0, 2);
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
       max_tokens: 300,
       messages: history,
     });
@@ -28,7 +28,7 @@ export async function getAIReply(userId: string, message: string): Promise<strin
 
     return reply;
   } catch (err) {
-    console.error("OpenAI error:", err);
+    console.error("Groq error:", err);
     return "Sorry, something went wrong. Try again!";
   }
 }
