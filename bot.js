@@ -23,7 +23,7 @@ async function ask(userId, text) {
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: { "Authorization": `Bearer ${GROQ_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "llama-3.3-70b-versatile", max_tokens: 400, messages: h })
+    body: JSON.stringify({ model: "llama-3.1-8b-instant", max_tokens: 400, messages: h })
   });
 
   if (!res.ok) {
