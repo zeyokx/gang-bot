@@ -1,3 +1,4 @@
+// v3-groq-fetch
 const conversationHistory: Map<string, { role: string; content: string }[]> = new Map();
 
 export async function getAIReply(userId: string, message: string): Promise<string> {
